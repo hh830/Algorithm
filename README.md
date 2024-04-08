@@ -15,6 +15,7 @@ https://www.acmicpc.net/workbook/view/8708
 
 - 99클럽 현직 개발자와 코딩 테스트 스터디 (미들러 ~ 챌린저)<br>
 [https://teamsparta.notion.site/99-f208901eaa24453fb163f6c832bf7552?pvs=4](https://99club.oopy.io/)
+https://velog.io/@jhh0830/series/%EC%BD%94%EB%94%A9-TIL
 
 <br>
 
