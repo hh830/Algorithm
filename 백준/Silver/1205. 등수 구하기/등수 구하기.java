@@ -15,27 +15,26 @@ public class Main {
 
         if (N == 0) {
             System.out.println(1);
-            System.exit(0);
         } else {
             StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
             for (int i = 0; i < N; i++) {
                 arr[i] = Integer.parseInt(stringTokenizer.nextToken());
             }
-        }
-
-        if (N == P && arr[arr.length - 1] >= new_score) {
-            System.out.println(-1);
-        } else {
-            int count = 1;
-            for (int i = 0; i < arr.length; i++) {
-                if (arr[i] > new_score) {
-                    count++;
-                } else{
-                    break;
+            
+            if (N == P && arr[arr.length - 1] >= new_score) {
+                System.out.println(-1);
+            } else {
+                int count = 1;
+                for (int i = 0; i < arr.length; i++) {
+                    if (arr[i] > new_score) {
+                        count++;
+                    } else {
+                        break;
+                    }
                 }
-            }
-            System.out.println(count);
+                System.out.println(count);
 
+            }
         }
     }
 }
