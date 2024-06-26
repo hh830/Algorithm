@@ -1,69 +1,73 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.nio.Buffer;
+import java.util.*;
 
 public class Main {
-    private static Queue<Integer> queue = new LinkedList<Integer>();
-
-    private static boolean bool[];
-    private static boolean visited[];
-    private static int N, M, V;
-    private static int graph[][];
-    private static String dfs_result = "";
-    private static String bfs_result = "";
+    static List<List<Integer>> list = new ArrayList<>();
+    static boolean[] visit;
+    static boolean[] visit1;
+    static int N, M;
+    static StringBuilder stringBuilder = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String str = br.readLine();
-        N = Integer.parseInt(str.split(" ")[0]);
-        M = Integer.parseInt(str.split(" ")[1]);
-        V = Integer.parseInt(str.split(" ")[2]);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+        N = Integer.parseInt(stringTokenizer.nextToken()); // 정점
+        M = Integer.parseInt(stringTokenizer.nextToken()); // 간선
+        int V = Integer.parseInt(stringTokenizer.nextToken()); // 탐색 시작 번호
 
-        graph = new int[N + 1][N + 1];
-        bool = new boolean[N + 1];
-        visited = new boolean[N + 1];
+        visit = new boolean[N+1];
+        visit1 = new boolean[N+1];
 
-        for (int i = 0; i < M; i++) {
-            String in = br.readLine();
-            int a = Integer.parseInt(in.split(" ")[0]);
-            int b = Integer.parseInt(in.split(" ")[1]);
-
-            graph[a][b] = graph[b][a] = 1;
+        for(int i=0;i<=N;i++) {
+            list.add(new ArrayList<Integer>());
         }
 
+        for(int i=0;i<M;i++){
+            stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+            int a = Integer.parseInt(stringTokenizer.nextToken());
+            int b = Integer.parseInt(stringTokenizer.nextToken());
+            list.get(a).add(b);
+            list.get(b).add(a);
+        }
+
+        for(int i=0;i<=N;i++){
+            Collections.sort(list.get(i));
+        }
+        
         dfs(V);
+        stringBuilder.append("\n");
+        stringBuilder.append(V).append(" ");
         bfs(V);
-        System.out.println(dfs_result);
-        System.out.println(bfs_result);
+        System.out.println(stringBuilder);
     }
 
-    private static void dfs(int node) {
-        bool[node] = true;
-        dfs_result += node + " ";
-
-        for (int i = 1; i <= N; ++i) {
-            if (!bool[i] && graph[node][i] != 0) {
-                dfs(i);
-            }
+    static void dfs(int node){
+        visit[node] = true;
+        stringBuilder.append(node).append(" ");
+        List<Integer> nodelist = list.get(node);
+        for(Integer i : nodelist){
+            if(visit[i]) continue;
+            dfs(i);
         }
     }
 
-    private static void bfs(int node) {
-        visited[node] = true;
-        queue.add(node);
+    static void bfs(int node){
+        Queue<Integer> queue = new ArrayDeque<>();
+        visit1[node] = true;
+        queue.offer(node);
 
-        while (!queue.isEmpty()) {
-            node = queue.poll();
-            bfs_result += node + " ";
+        while(!queue.isEmpty()){
+            int num = queue.poll();
+            List<Integer> nodeList = list.get(num);
+            for(Integer i : nodeList){
+                if(visit1[i]) continue;
+                stringBuilder.append(i).append(" ");
 
-            for (int i = 1; i <= N; i++) {
-                if (!visited[i] && graph[node][i] != 0) {
-                    visited[i] = true;
-                    queue.add(i);
-                }
+                visit1[i] = true;
+                queue.offer(i);
             }
         }
     }
