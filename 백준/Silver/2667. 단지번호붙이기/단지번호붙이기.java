@@ -1,82 +1,70 @@
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 public class Main {
-    private static int dx[] = {0,0,1,-1};
-    private static int dy[] = {1,-1,0,0};
-    private static int[] aparts = new int[25*25];
-    private static int n;
-    private static int apartNum = 0; //아파트 단지 번호의 수
-    private static boolean[][] visited = new boolean[25][25]; //방문여부
-    private static int[][] map = new int[25][25]; //지도
+    static int[][] map;
+    static boolean[][] visited;
+    static int[] dx = {-1, 1, 0, 0}; // 상하좌우
+    static int[] dy = {0, 0, -1, 1}; // 상하좌우
+    static int N;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
 
-        map = new int[n][n];
-        visited = new boolean[n][n];
+        map = new int[N][N];
+        visited = new boolean[N][N];
 
-        //전체 사각형 입력 받기
-        for(int i=0; i<n; i++){
-            String input = sc.next();
-            for(int j=0; j<n; j++){
-                map[i][j] = input.charAt(j)-'0';
+        // 지도 정보 입력
+        for (int i = 0; i < N; i++) {
+            String line = br.readLine();
+            for (int j = 0; j < N; j++) {
+                map[i][j] = line.charAt(j) - '0'; // char to int 변환
             }
         }
 
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                if(map[i][j] == 1 && !visited[i][j]){
-                    apartNum++;
-                    bfs(i,j);
+        ArrayList<Integer> complexSizes = new ArrayList<>();
+
+        // 모든 칸에 대해 DFS 수행
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (map[i][j] == 1 && !visited[i][j]) {
+                    int complexSize = dfs(i, j);
+                    complexSizes.add(complexSize);
                 }
             }
         }
 
-        Arrays.sort(aparts);
-        System.out.println(apartNum);
+        // 단지 수 출력
+        System.out.println(complexSizes.size());
 
-        for(int i=0; i<aparts.length; i++){
-            if(aparts[i] == 0){
-            }else{
-                System.out.println(aparts[i]);
-            }
+        // 단지 내 집의 수를 오름차순으로 정렬하여 출력
+        Collections.sort(complexSizes);
+        for (int size : complexSizes) {
+            System.out.println(size);
         }
-
     }
 
-    private static void bfs(int x, int y) {
-        //2차원 LinkedList를 가진 큐 선언
-        Queue<int[]> que = new LinkedList<>();
-        que.add(new int[]{x,y});
+    // DFS로 단지의 크기를 계산하는 함수
+    static int dfs(int x, int y) {
         visited[x][y] = true;
-        aparts[apartNum]++;
+        int complexSize = 1;
 
-        while(!que.isEmpty()){
+        // 상하좌우에 대해 탐색
+        for (int d = 0; d < 4; d++) {
+            int nx = x + dx[d];
+            int ny = y + dy[d];
 
-            //x, y 값을 받아오기 위한 방법
-            int curX = que.peek()[0];
-            int curY = que.peek()[1];
-            que.poll();
-
-            for(int i=0; i<4; i++){
-                int nx = curX + dx[i];
-                int ny = curY + dy[i];
-
-                if(nx >= 0 && ny >= 0 && nx < n && ny < n){
-                    if(map[nx][ny] == 1 && !visited[nx][ny]){
-                        que.add(new int[]{nx,ny});
-                        visited[nx][ny] = true;
-                        aparts[apartNum]++;
-                    }
+            // 범위 체크 및 방문하지 않은 집이면 재귀 호출
+            if (nx >= 0 && nx < N && ny >= 0 && ny < N) {
+                if (map[nx][ny] == 1 && !visited[nx][ny]) {
+                    complexSize += dfs(nx, ny);
                 }
             }
         }
-    }
 
+        return complexSize;
+    }
 }
