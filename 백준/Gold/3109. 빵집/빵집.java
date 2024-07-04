@@ -33,7 +33,7 @@ public class Main {
     }
 
     static void dfs(int x, int y) {
-        //visit[y][x] = true;
+        visit[y][x] = true;
 
         if (x == C - 1) {
             flag = true;
@@ -45,7 +45,6 @@ public class Main {
         if (check(x + 1, y - 1) && arr[y - 1][x + 1]=='.') {
             // 오른쪽 대각선 위 갈 수 있음
             dfs(x + 1, y - 1);
-            visit[y][x] = true;
             if (flag) {
                 return;
             }
@@ -53,13 +52,11 @@ public class Main {
         if (check(x + 1, y) && arr[y][x + 1]=='.') {
             // 오른쪽 갈 수 있음
             dfs(x + 1, y);
-            visit[y][x] = true;
             if (flag) return;
         }
         if (check(x + 1, y + 1) && arr[y + 1][x + 1]=='.') {
             // 오른족 아래 갈 수 있음
             dfs(x + 1, y + 1);
-            visit[y][x] = true;
             if (flag) return;
         }
     }
