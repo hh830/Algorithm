@@ -34,14 +34,14 @@ public class Main {
         }
     }
 
-    static void markNumber(int num) {
+    private static void markNumber(int num) {
         for (int i = 0; i < 5; i++)
             for (int j = 0; j < 5; j++)
                 if (arr[i][j] == num)
                     visit[i][j] = true;
     }
 
-    static int checkBingo() {
+    private static int checkBingo() {
         int bingo = 0;
 
         // 가로줄
